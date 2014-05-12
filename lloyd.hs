@@ -19,11 +19,17 @@ goalState x y = [1..x * y - 1] ++ [0]
 -- Generate state transitions for given state
 nextStates :: Int -> Int -> [Int] -> [[Int]]
 nextStates x y s = []
-        ++ if mod zPos x > 0 then swap (zPos - 1) zPos s else []
-        ++ if (mod zPos x) + 1 < x then swap (zPos + 1) zPos s else []
-        ++ if zPos / x > 0 then swap (zPos - x) zPos s else []
-        ++ if (zPos / x) + 1 < y then swap (zPos + x) zPos s else []
-        where   zPos = elemIndex 0 s -- FIXME
+        ++ (if (mod zPos x) > 0 then [swap (zPos - 1) zPos s] else [])
+        ++ (if (mod zPos x) + 1 < x then [swap (zPos + 1) zPos s] else [])
+        ++ (if (div zPos x) > 0 then [swap (zPos - x) zPos s] else [])
+        ++ (if (div zPos x) + 1 < y then [swap (zPos + x) zPos s] else [])
+        where   zPos = index 0 s
+
+-- A wrapper for the elemIndex function
+index :: Int -> [Int] -> Int
+index a as = case elemIndex a as of
+        Nothing -> -1
+        Just i -> i
 
 -- Swaps two items in a list
 swap :: Int -> Int -> [Int] -> [Int]
