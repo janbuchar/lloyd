@@ -32,3 +32,17 @@ swap :: Int -> Int -> [Int] -> [Int]
 swap a b nums = take low nums ++ [nums !! high] ++ drop (low + 1) (take high nums) ++ [nums !! low] ++ drop (high + 1) nums
         where   high = max a b
                 low = min a b
+
+-- Calculates the distance of given state from the goal state
+-- The distance is defined as the sum of Manhattan distances
+-- of the blocks from their positions in the goal state
+price :: Int -> Int -> [Int] -> Int
+price x y s = foldl (+) 0 $ map (blockDistance x y) (zip positions goal)
+        where   positions = [0 .. x * y - 1]
+                goal = map (\n -> if n == 0 then x * y - 1 else n - 1) s
+
+-- Calculates the distance of two blocks in a square grid
+blockDistance :: Int -> Int -> (Int, Int) -> Int
+blockDistance x y (a, b) = dx + dy
+        where   dx = abs ((mod a x) - (mod b x))
+                dy = abs ((div a x) - (div b x))
