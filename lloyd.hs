@@ -1,3 +1,4 @@
+import qualified Data.Set as Set
 import Data.List (elemIndex)
 
 data State = State {x :: Int, y :: Int, board :: [Int]} deriving (Eq)
@@ -11,11 +12,21 @@ solve :: Int -> Int -> [Int] -> Maybe [Int]
 solve x y board 
         | length board /= x * y = Nothing
         | not (elem 0 board) = Nothing
-        | otherwise = Just [0] -- Placeholder
+        | otherwise = search (Set.singleton (State x y board)) Set.empty
+
+-- Perform an A* search
+search :: Set.Set State -> Set.Set [Int] -> Maybe [Int]
+search queue seen
+        | Set.null queue = Nothing
+        | s == (goalState x y) = Just [0] -- Placeholder
+        | otherwise = search (Set.union queue' next) (Set.insert b seen)
+        where   (s@(State x y b), queue') = Set.deleteFindMin queue
+                succ = filter (\a -> not (Set.member a seen)) (nextStates s)
+                next = Set.fromList $ map (\a -> (State x y a)) succ
 
 -- The goal state for given dimensions
-goalState :: Int -> Int -> [Int]
-goalState x y = [1..x * y - 1] ++ [0]
+goalState :: Int -> Int -> State
+goalState x y = (State x y ([1..x * y - 1] ++ [0]))
 
 -- Generate state transitions for given state
 nextStates :: State -> [[Int]]
