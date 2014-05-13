@@ -1,5 +1,10 @@
 import Data.List (elemIndex)
 
+data State = State {x :: Int, y :: Int, board :: [Int]} deriving (Eq)
+
+instance Ord State where
+        compare s1 s2 = compare (price s1) (price s2)
+
 -- Takes the dimensions of the board and a list describing the board.
 -- Returns a list of fields to swap with the zero field
 solve :: Int -> Int -> [Int] -> Maybe [Int]
@@ -13,8 +18,8 @@ goalState :: Int -> Int -> [Int]
 goalState x y = [1..x * y - 1] ++ [0]
 
 -- Generate state transitions for given state
-nextStates :: Int -> Int -> [Int] -> [[Int]]
-nextStates x y s = []
+nextStates :: State -> [[Int]]
+nextStates (State x y s) = []
         ++ (if (mod zPos x) > 0 then [swap (zPos - 1) zPos s] else [])
         ++ (if (mod zPos x) + 1 < x then [swap (zPos + 1) zPos s] else [])
         ++ (if (div zPos x) > 0 then [swap (zPos - x) zPos s] else [])
@@ -36,8 +41,8 @@ swap a b nums = take low nums ++ [nums !! high] ++ drop (low + 1) (take high num
 -- Calculates the distance of given state from the goal state
 -- The distance is defined as the sum of Manhattan distances
 -- of the blocks from their positions in the goal state
-price :: Int -> Int -> [Int] -> Int
-price x y s = foldl (+) 0 $ map (blockDistance x y) (zip positions goal)
+price :: State -> Int
+price (State x y s) = foldl (+) 0 $ map (blockDistance x y) (zip positions goal)
         where   positions = [0 .. x * y - 1]
                 goal = map (\n -> if n == 0 then x * y - 1 else n - 1) s
 
