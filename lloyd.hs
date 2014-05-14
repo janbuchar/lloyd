@@ -80,9 +80,12 @@ index a as = case elemIndex a as of
 
 -- Swaps two items in a list
 swap :: Int -> Int -> [Int] -> [Int]
-swap a b nums = take low nums ++ [nums !! high] ++ drop (low + 1) (take high nums) ++ [nums !! low] ++ drop (high + 1) nums
+swap a b nums = bottom ++ [nums !! high] ++ middle ++ [nums !! low] ++ top
 	where	high = max a b
 		low = min a b
+		bottom = take low nums
+		middle = drop (low + 1) (take high nums)
+		top = drop (high + 1) nums
 
 -- Calculates the distance of given state from the goal state
 -- The distance is defined as the sum of Manhattan distances
