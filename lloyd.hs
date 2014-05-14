@@ -2,6 +2,7 @@ import qualified Data.Set as Set
 import qualified Data.Map as Map
 import Data.List (elemIndex, find)
 import Debug.Trace
+import System.IO
 
 data State = State {cost :: Int, steps :: Int, board :: [Int]}
 
@@ -100,3 +101,18 @@ blockDistance :: Board -> (Int, Int) -> Int
 blockDistance (Board x y) (a, b) = dx + dy
 	where	dx = abs ((mod a x) - (mod b x))
 		dy = abs ((div a x) - (div b x))
+
+-- First read width and height of the board from the first line,
+-- then read the board contents from the second line (0 = empty space)
+-- and print solution
+main :: IO ()
+main = do
+	dims <- getLine
+	let x = read ((words dims) !! 0) :: Int
+	let y = read ((words dims) !! 1) :: Int
+	nums <- getLine
+	let board = map (\a -> read a :: Int) (words nums)
+	putStr . unlines $ case solve x y board of
+		Nothing -> ["No solution exists"]
+		Just res -> (map show res)
+
