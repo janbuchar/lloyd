@@ -11,6 +11,7 @@ itself (by rows) on the second line, where 0 represents the empty place.
 Example input
 ----
 Solve for a two by two board where the first row is (0, 1) and the second row is (3, 2).
+
 	2 2
 	0 1 3 2
 
@@ -21,6 +22,7 @@ The program outputs the numbers of blocks that should be moved to the empty plac
 Example output
 ----
 Solution for the example input - first move the "1" block, then move the "2" block.
+
 	1
 	2
 
